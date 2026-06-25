@@ -23,6 +23,7 @@ export default function ScrollToTop() {
             className={`scroll-top${visible ? " visible" : ""}`}
             onClick={scrollToTop}
             aria-label="Scroll to top"
+            id="scroll-to-top"
         >
             <svg viewBox="0 0 24 24" width="20" height="20">
                 <path

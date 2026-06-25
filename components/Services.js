@@ -75,6 +75,7 @@ const services = [
 
 export default function Services() {
     const cardsRef = useRef([]);
+    const sectionRef = useRef(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -91,7 +92,7 @@ export default function Services() {
         cardsRef.current.forEach((card, i) => {
             if (card) {
                 card.classList.add("reveal");
-                card.style.transitionDelay = `${i * 0.1}s`;
+                card.style.transitionDelay = `${i * 0.12}s`;
                 observer.observe(card);
             }
         });
@@ -100,7 +101,7 @@ export default function Services() {
     }, []);
 
     return (
-        <section id="services" className="section services-section">
+        <section id="services" className="section services-section" aria-label="Services offered" ref={sectionRef}>
             <div className="container">
                 <p className="section-tag center">SERVICES</p>
                 <h2 className="section-title">My Features &amp; Services</h2>
@@ -111,10 +112,15 @@ export default function Services() {
                             key={service.title}
                             className={`service-card${service.featured ? " featured" : ""}`}
                             ref={(el) => (cardsRef.current[i] = el)}
+                            role="article"
+                            aria-label={`Service: ${service.title}`}
+                            itemScope
+                            itemType="https://schema.org/Service"
                         >
+                            <meta itemProp="provider" content="Abhishek Yadav" />
                             <div className="service-icon">{service.icon}</div>
-                            <h3 className="service-title">{service.title}</h3>
-                            <p className="service-desc">{service.desc}</p>
+                            <h3 className="service-title" itemProp="name">{service.title}</h3>
+                            <p className="service-desc" itemProp="description">{service.desc}</p>
                         </div>
                     ))}
                 </div>

@@ -1,34 +1,28 @@
-import { GitHubIcon, LinkedInIcon, InstagramIcon } from "./icons";
+import { GitHubIcon, InstagramIcon } from "./icons";
 
 export default function Footer() {
     return (
-        <footer className="footer">
+        <footer className="footer" role="contentinfo">
             <div className="container footer-container">
-                <p>&copy; 2026 Abhishek Yadav. All rights reserved.</p>
+                <p>
+                    &copy; 2026 <span className="footer-brand">Abhishek Yadav</span>. All rights reserved.
+                </p>
                 <div className="footer-social">
                     <a
-                        href="#"
+                        href="https://github.com/Integritycodesz"
                         aria-label="GitHub"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <GitHubIcon size={20} />
+                        <GitHubIcon size={18} />
                     </a>
                     <a
-                        href="#"
-                        aria-label="LinkedIn"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <LinkedInIcon size={20} />
-                    </a>
-                    <a
-                        href="#"
+                        href="https://www.instagram.com/abhi.yadavv8"
                         aria-label="Instagram"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <InstagramIcon size={20} />
+                        <InstagramIcon size={18} />
                     </a>
                 </div>
             </div>

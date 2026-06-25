@@ -22,13 +22,14 @@ export default function Contact() {
         cardsRef.current.forEach((card, i) => {
             if (card) {
                 card.classList.add("reveal");
-                card.style.transitionDelay = `${i * 0.1}s`;
+                card.style.transitionDelay = `${i * 0.12}s`;
                 observer.observe(card);
             }
         });
 
         if (formRef.current) {
             formRef.current.classList.add("reveal");
+            formRef.current.style.transitionDelay = "0.2s";
             observer.observe(formRef.current);
         }
 
@@ -47,11 +48,11 @@ export default function Contact() {
     const contactInfo = [
         { icon: "📧", title: "Email", value: "abhishekyadav@example.com" },
         { icon: "📍", title: "Location", value: "India" },
-        { icon: "📱", title: "Phone", value: "+91 XXXXX XXXXX" },
+        { icon: "📱", title: "Phone", value: "+91 89310 97990" },
     ];
 
     return (
-        <section id="contact" className="section contact-section">
+        <section id="contact" className="section contact-section" aria-label="Contact information">
             <div className="container">
                 <p className="section-tag center">CONTACT</p>
                 <h2 className="section-title">Get In Touch</h2>
@@ -78,52 +79,60 @@ export default function Contact() {
                         className="contact-form"
                         onSubmit={handleSubmit}
                         ref={formRef}
+                        id="contact-form"
                     >
                         <div className="form-group">
-                            <label htmlFor="name">Your Name</label>
+                            <label htmlFor="contact-name">Your Name</label>
                             <input
                                 type="text"
-                                id="name"
+                                id="contact-name"
                                 name="name"
                                 placeholder="Your Name"
                                 required
+                                aria-required="true"
+                                autoComplete="name"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="email">Your Email</label>
+                            <label htmlFor="contact-email">Your Email</label>
                             <input
                                 type="email"
-                                id="email"
+                                id="contact-email"
                                 name="email"
                                 placeholder="Your Email"
                                 required
+                                aria-required="true"
+                                autoComplete="email"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="subject">Subject</label>
+                            <label htmlFor="contact-subject">Subject</label>
                             <input
                                 type="text"
-                                id="subject"
+                                id="contact-subject"
                                 name="subject"
                                 placeholder="Subject"
+                                autoComplete="off"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="message">Your Message</label>
+                            <label htmlFor="contact-message">Your Message</label>
                             <textarea
-                                id="message"
+                                id="contact-message"
                                 name="message"
                                 rows="5"
                                 placeholder="Your Message"
                                 required
+                                aria-required="true"
                             ></textarea>
                         </div>
                         <button
                             type="submit"
                             className="btn btn-primary btn-full"
+                            id="contact-submit"
                             style={
                                 submitted
-                                    ? { background: "#4caf50" }
+                                    ? { background: "linear-gradient(135deg, #22c55e, #10b981)" }
                                     : {}
                             }
                         >

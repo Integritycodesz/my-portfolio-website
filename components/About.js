@@ -21,17 +21,17 @@ export default function About() {
         );
 
         if (contentRef.current) {
-            contentRef.current.classList.add("reveal");
+            contentRef.current.classList.add("reveal-left");
             observer.observe(contentRef.current);
         }
         if (imageRef.current) {
-            imageRef.current.classList.add("reveal");
+            imageRef.current.classList.add("reveal-right");
             observer.observe(imageRef.current);
         }
         cardsRef.current.forEach((card, i) => {
             if (card) {
-                card.classList.add("reveal");
-                card.style.transitionDelay = `${i * 0.1}s`;
+                card.classList.add("reveal-scale");
+                card.style.transitionDelay = `${i * 0.15}s`;
                 observer.observe(card);
             }
         });
@@ -40,7 +40,12 @@ export default function About() {
     }, []);
 
     return (
-        <section id="about" className="section about-section">
+        <section id="about" className="section about-section" aria-label="About Abhishek Yadav" itemScope itemType="https://schema.org/Person">
+            <meta itemProp="name" content="Abhishek Yadav" />
+            <meta itemProp="jobTitle" content="React Developer & Front-End Engineer" />
+            <meta itemProp="url" content="https://abhishek-xi.vercel.app" />
+            <meta itemProp="telephone" content="+91 89310 97990" />
+            <meta itemProp="email" content="abhishekyadav@example.com" />
             <div className="container about-container">
                 <div className="about-content" ref={contentRef}>
                     <p className="section-tag">ABOUT ME</p>
@@ -50,17 +55,11 @@ export default function About() {
                         Digital Experiences
                     </h2>
                     <div className="about-divider"></div>
-                    <p className="about-text">
-                        I&apos;m a creative front-end developer passionate about building
-                        modern and responsive web experiences. My journey began with a love
-                        for design and evolved into a deep curiosity for how the web works —
-                        combining logic with creativity to bring ideas to life.
+                    <p className="about-text" itemProp="description">
+                        I&apos;m a <strong>professional Front-End Developer and React.js Engineer</strong> based in India, specializing in modern web design and interactive user interfaces. My journey began with a passion for digital layouts and evolved into engineering high-performance Next.js web applications — blending logical architecture with pixel-perfect visual design.
                     </p>
                     <p className="about-text">
-                        When I&apos;m not coding, I enjoy learning new technologies,
-                        improving my projects, and exploring better ways to make the web
-                        faster and more engaging. I believe in continuous learning, attention
-                        to detail, and the power of clean, meaningful design.
+                        When I&apos;m not coding, I enjoy learning modern technologies, optimizing my current projects for speed, and exploring innovative approaches to make user experiences faster, more accessible, and highly engaging. I emphasize semantic markup, clean architectures, and search-optimized development patterns.
                     </p>
                     <h3 className="about-subtitle">What Drives Me</h3>
                     <div className="drives-cards">
@@ -96,11 +95,12 @@ export default function About() {
                 <div className="about-image" ref={imageRef}>
                     <div className="about-avatar-wrapper">
                         <Image
-                            src="/about-avatar.png"
-                            alt="Abhishek Yadav About Avatar"
+                            src="/about-avatar-new.png"
+                            alt="Abhishek Yadav — React Developer & Front-End Engineer"
                             className="about-avatar-img"
                             width={360}
                             height={420}
+                            itemProp="image"
                         />
                     </div>
                 </div>
