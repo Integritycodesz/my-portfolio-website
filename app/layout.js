@@ -99,7 +99,7 @@ export const metadata = {
     },
   },
   verification: {
-    google: "google6b43b44f2dbdb591",
+    google: "ZJM_UFp91IO9UuoA0AWpXLYF-GvLh7GbGVvkcg4u6k0",
   },
 };
 
