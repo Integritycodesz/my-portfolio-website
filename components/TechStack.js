@@ -51,6 +51,9 @@ export default function TechStack() {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
+            card.style.setProperty("--mouse-x", `${x}px`);
+            card.style.setProperty("--mouse-y", `${y}px`);
+            
             const xc = x / rect.width - 0.5;
             const yc = y / rect.height - 0.5;
             

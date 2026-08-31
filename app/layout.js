@@ -257,7 +257,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -269,6 +269,9 @@ export default function RootLayout({ children }) {
                     theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
                   }
                   document.documentElement.setAttribute('data-theme', theme);
+
+                  var color = localStorage.getItem('color') || 'purple';
+                  document.documentElement.setAttribute('data-color', color);
                 } catch (e) {}
               })();
             `,

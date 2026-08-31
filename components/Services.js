@@ -100,6 +100,37 @@ export default function Services() {
         return () => observer.disconnect();
     }, []);
 
+    // Cursor Tracking Glowing Aura Effect
+    useEffect(() => {
+        const handleMouseMove = (e, card) => {
+            if (!card.classList.contains("visible")) return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty("--mouse-x", `${x}px`);
+            card.style.setProperty("--mouse-y", `${y}px`);
+        };
+
+        const cards = cardsRef.current;
+        const listeners = [];
+
+        cards.forEach((card) => {
+            if (!card) return;
+            const onMouseMove = (e) => handleMouseMove(e, card);
+            card.addEventListener("mousemove", onMouseMove);
+            listeners.push({ card, onMouseMove });
+        });
+
+        return () => {
+            listeners.forEach(({ card, onMouseMove }) => {
+                if (card) {
+                    card.removeEventListener("mousemove", onMouseMove);
+                }
+            });
+        };
+    }, []);
+
     return (
         <section id="services" className="section services-section" aria-label="Services offered" ref={sectionRef}>
             <div className="container">

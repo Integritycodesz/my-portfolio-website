@@ -1,40 +1,6 @@
 /* ============================================
    DESIGN TOKENS & RESET
    ============================================ */
-[data-theme='light'] {
-    --bg: #f8fafc;
-    --bg-alt: #f1f5f9;
-    --bg-card: rgba(15, 23, 42, 0.04);
-    --bg-card-hover: rgba(15, 23, 42, 0.07);
-    --bg-glass: rgba(255, 255, 255, 0.7);
-    --bg-glass-strong: rgba(255, 255, 255, 0.95);
-
-    /* Accents */
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --primary-light: rgba(99, 102, 241, 0.1);
-    --accent: #06b6d4;
-    --accent-light: rgba(6, 182, 212, 0.1);
-    --gradient: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-    --gradient-text: linear-gradient(135deg, #4f46e5, #0891b2);
-    --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(6, 182, 212, 0.06));
-
-    /* Text */
-    --text: #0f172a;
-    --text-muted: #475569;
-    --text-light: #64748b;
-    --text-dim: rgba(15, 23, 42, 0.5);
-
-    /* Borders */
-    --border: rgba(15, 23, 42, 0.08);
-    --border-hover: rgba(99, 102, 241, 0.25);
-
-    /* Shadows & Glows */
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    --card-shadow-hover: 0 10px 30px rgba(99, 102, 241, 0.12);
-    --glow: 0 0 20px rgba(99, 102, 241, 0.08);
-    --glow-strong: 0 0 40px rgba(99, 102, 241, 0.12);
-}
 
 /* Smooth transitions for theme toggle */
 body, 
@@ -94,6 +60,8 @@ footer {
 
     /* Nav */
     --nav-height: 64px;
+    --bg-nav: rgba(13, 15, 26, 0.85);
+    --bg-nav-hover: rgba(255, 255, 255, 0.06);
 
     /* Transitions */
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -102,6 +70,231 @@ footer {
     /* Fonts */
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-heading: 'Outfit', var(--font);
+}
+
+html[data-theme='light'] {
+    --bg: #f8fafc;
+    --bg-alt: #f1f5f9;
+    --bg-card: rgba(15, 23, 42, 0.04);
+    --bg-card-hover: rgba(15, 23, 42, 0.07);
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-glass-strong: rgba(255, 255, 255, 0.95);
+
+    /* Accents */
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: rgba(99, 102, 241, 0.1);
+    --accent: #06b6d4;
+    --accent-light: rgba(6, 182, 212, 0.1);
+    --gradient: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+    --gradient-text: linear-gradient(135deg, #4f46e5, #0891b2);
+    --gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(6, 182, 212, 0.06));
+
+    /* Text */
+    --text: #0f172a;
+    --text-muted: #475569;
+    --text-light: #64748b;
+    --text-dim: rgba(15, 23, 42, 0.5);
+
+    /* Borders */
+    --border: rgba(15, 23, 42, 0.08);
+    --border-hover: rgba(99, 102, 241, 0.25);
+
+    /* Shadows & Glows */
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --card-shadow-hover: 0 10px 30px rgba(99, 102, 241, 0.12);
+    --glow: 0 0 20px rgba(99, 102, 241, 0.08);
+    --glow-strong: 0 0 40px rgba(99, 102, 241, 0.12);
+    --bg-nav: rgba(248, 250, 252, 0.85);
+    --bg-nav-hover: rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   ACCENT COLOR THEMES
+   ============================================ */
+html[data-color='emerald'] {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --primary-light: rgba(16, 185, 129, 0.15);
+    --gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    --gradient-text: linear-gradient(135deg, #34d399, #67e8f9);
+    --border-hover: rgba(16, 185, 129, 0.3);
+    --card-shadow-hover: 0 8px 40px rgba(16, 185, 129, 0.12);
+    --glow: 0 0 20px rgba(16, 185, 129, 0.25);
+    --glow-strong: 0 0 40px rgba(16, 185, 129, 0.35);
+}
+
+html[data-color='rose'] {
+    --primary: #f43f5e;
+    --primary-dark: #e11d48;
+    --primary-light: rgba(244, 63, 94, 0.15);
+    --gradient: linear-gradient(135deg, #f43f5e 0%, #d946ef 100%);
+    --gradient-text: linear-gradient(135deg, #fb7185, #f472b6);
+    --border-hover: rgba(244, 63, 94, 0.3);
+    --card-shadow-hover: 0 8px 40px rgba(244, 63, 94, 0.12);
+    --glow: 0 0 20px rgba(244, 63, 94, 0.25);
+    --glow-strong: 0 0 40px rgba(244, 63, 94, 0.35);
+}
+
+html[data-color='cyan'] {
+    --primary: #06b6d4;
+    --primary-dark: #0891b2;
+    --primary-light: rgba(6, 182, 212, 0.15);
+    --gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --gradient-text: linear-gradient(135deg, #67e8f9, #93c5fd);
+    --border-hover: rgba(6, 182, 212, 0.3);
+    --card-shadow-hover: 0 8px 40px rgba(6, 182, 212, 0.12);
+    --glow: 0 0 20px rgba(6, 182, 212, 0.25);
+    --glow-strong: 0 0 40px rgba(6, 182, 212, 0.35);
+}
+
+html[data-theme='light'][data-color='emerald'] {
+    --primary-light: rgba(16, 185, 129, 0.08);
+    --card-shadow-hover: 0 8px 30px rgba(16, 185, 129, 0.08);
+    --glow: 0 0 20px rgba(16, 185, 129, 0.1);
+    --glow-strong: 0 0 40px rgba(16, 185, 129, 0.15);
+}
+
+html[data-theme='light'][data-color='rose'] {
+    --primary-light: rgba(244, 63, 94, 0.08);
+    --card-shadow-hover: 0 8px 30px rgba(244, 63, 94, 0.08);
+    --glow: 0 0 20px rgba(244, 63, 94, 0.1);
+    --glow-strong: 0 0 40px rgba(244, 63, 94, 0.15);
+}
+
+html[data-theme='light'][data-color='cyan'] {
+    --primary-light: rgba(6, 182, 212, 0.08);
+    --card-shadow-hover: 0 8px 30px rgba(6, 182, 212, 0.08);
+    --glow: 0 0 20px rgba(6, 182, 212, 0.1);
+    --glow-strong: 0 0 40px rgba(6, 182, 212, 0.15);
+}
+
+/* ============================================
+   SCROLL PROGRESS BAR
+   ============================================ */
+.scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 2000;
+    background: transparent;
+    pointer-events: none;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    background: var(--gradient);
+    width: 0%;
+    transition: width 0.1s ease-out;
+    box-shadow: var(--glow);
+}
+
+/* ============================================
+   INTERACTIVE CURSOR GLOW FOR CARDS
+   ============================================ */
+.project-card, .tech-card, .service-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before, .tech-card::before, .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+        350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+        var(--primary),
+        transparent 80%
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover::before, .tech-card:hover::before, .service-card:hover::before {
+    opacity: 1;
+}
+
+.project-card::after, .tech-card::after, .service-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        300px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+        var(--primary-light),
+        transparent 80%
+    );
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover::after, .tech-card:hover::after, .service-card:hover::after {
+    opacity: 1;
+}
+
+.project-info, .project-image, .tech-card-header, .tech-progress, .service-icon, .service-title, .service-desc {
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   COLOR PICKER WIDGET
+   ============================================ */
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+    border-left: 1px solid var(--border);
+    padding-left: 12px;
+}
+
+.color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.color-dot:hover {
+    transform: scale(1.25);
+}
+
+.color-dot.active {
+    border-color: var(--text);
+    transform: scale(1.15);
+}
+
+.color-dot--purple { background-color: #8b5cf6; }
+.color-dot--emerald { background-color: #10b981; }
+.color-dot--rose { background-color: #f43f5e; }
+.color-dot--cyan { background-color: #06b6d4; }
+
+@media (max-width: 768px) {
+    .color-picker {
+        gap: 6px;
+        margin-left: 6px;
+        padding-left: 6px;
+    }
+    .color-dot {
+        width: 12px;
+        height: 12px;
+    }
 }
 
 *, *::before, *::after {
@@ -242,11 +435,11 @@ ul, ol {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background: rgba(13, 15, 26, 0.85);
+    background: var(--bg-nav);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-radius: 50px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--card-shadow);
     border: 1px solid var(--border);
     transition: var(--transition);
 }
@@ -297,7 +490,7 @@ ul, ol {
 
 .nav-link:hover {
     color: var(--text);
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--bg-nav-hover);
 }
 
 .nav-link.active {

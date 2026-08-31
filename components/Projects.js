@@ -6,6 +6,15 @@ import { GitHubIcon, ExternalLinkIcon } from "./icons";
 
 const projects = [
     {
+        title: "Pandit Jii",
+        desc: "A full-stack marketplace connecting verified priests with devotees. Features puja booking, Vedic astrology, split payments, and a two-sided app ecosystem.",
+        tags: ["Flutter", "Next.js", "Supabase", "PostgreSQL"],
+        image: "/pandit-jii-thumbnail.jpg",
+        caseStudy: "/projects/pandit-jii",
+        github: "#",
+        live: "#",
+    },
+    {
         title: "Pro Tournament",
         desc: "A professional tournament platform to organize and join gaming tournaments with real-time brackets and leaderboards.",
         tags: ["React", "JavaScript", "CSS"],
@@ -89,6 +98,9 @@ export default function Projects() {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
+            
+            card.style.setProperty("--mouse-x", `${x}px`);
+            card.style.setProperty("--mouse-y", `${y}px`);
             
             const xc = x / rect.width - 0.5;
             const yc = y / rect.height - 0.5;
@@ -180,6 +192,16 @@ export default function Projects() {
                                     ))}
                                 </div>
                                 <div className="project-links">
+                                    {project.caseStudy && (
+                                        <a
+                                            href={project.caseStudy}
+                                            className="btn-github"
+                                            aria-label={`View detailed case study for ${project.title}`}
+                                        >
+                                            <ExternalLinkIcon size={16} />
+                                            Case Study
+                                        </a>
+                                    )}
                                     {project.github && project.github !== "#" && (
                                         <a
                                             href={project.github}
@@ -192,7 +214,7 @@ export default function Projects() {
                                             GitHub
                                         </a>
                                     )}
-                                    {project.live && (
+                                    {project.live && project.live !== "#" && (
                                         <a
                                             href={project.live}
                                             className="btn-github"

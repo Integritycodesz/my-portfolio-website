@@ -1,0 +1,779 @@
+### The Problem
+Religious rituals and astrological services in India are a 
+**$40B+ unorganized market**
+ plagued by opaque pricing, lack of verified priests, geographical discovery bottlenecks, no physical service completion guarantees, and friction in payments/payouts.
+### The Solution: The Pandit 
+Jii
+ Ecosystem
+**Pandit 
+Jii
+**
+ is a full-stack, two-sided marketplace and temple-tech platform connecting verified priests (Pandits) with devotees across the globe:
+* 
+**Devotee App (`
+pandit_jii
+`
+):*
+*
+ Puja booking with custom 
+samagri
+ packages, dynamic split-advance payments (20%/100%), Vedic astrology (KP engine + 
+Kundali
+ generation), 
+Muhurat
+ calculators, and short-form spiritual video reels.
+* 
+**Partner App (`
+pandit_partner_app
+`
+):*
+*
+ Priest onboarding, automated Vedic assessment tests, KYC document verification, availability scheduler, two-phase OTP physical service handshake, double-entry earnings ledger, bank/UPI cashouts, and self-serve B2B sponsored ad campaigns.
+* 
+**Admin Web Dashboard (`
+pandit_admin_web
+`
+):*
+*
+ Next.js 16 (React 19) portal with Server Components (RSC), RBAC permissions, live financial analytics, KYC auditing, automated payout disbursements, and employee management.
+* 
+**Backend Cloud 
+Infrastructure:*
+*
+ PostgreSQL 17 with 
+PostGIS
+ geospatial routing, `
+pg_trgm
+` fuzzy matching, `
+pg_net
+` asynchronous webhooks (WhatsApp/
+Cashfree
+), strict Row-Level Security (RLS) on 100% of tables, Deno edge functions, and an automated dual-stage migration ledger.
+---
+## 2. Complete System Architecture & Flow Diagram
+```mermaid
+graph TB
+    subgraph Clients [Client Applications Layer]
+        
+DevoteeApp
+[
+"
+📱
+ Devotee App<
+br
+/><b>Flutter (
+Riverpod
+ v3 + 
+GoRouter
+)<
+/b>"]
+        
+PartnerApp
+[
+"
+📱
+ Partner App<
+br
+/><b>Flutter (Clean Arch + 
+Sentry)<
+/b>"]
+        
+AdminWeb
+[
+"
+💻
+ Admin Dashboard<
+br
+/><b>Next.js 16 (React 19 RSC + Tailwind v
+4)<
+/b>"]
+    end
+    subgraph 
+EdgeLayer
+ [
+Supabase
+ Edge Functions - Deno Runtime]
+        
+RazorpayOrder
+["create-
+razorpay
+-order<
+br
+/><
+i
+>(
+Server-side 
+pricing)<
+/
+i
+>"]
+        
+RazorpayVerify
+["verify-
+razorpay
+-payment<
+br
+/><
+i
+>(
+HMAC-SHA256 Sig 
+Check)<
+/
+i
+>"]
+        
+CashfreePayout
+["
+cashfree
+-payout<
+br
+/><
+i
+>(
+Bank/UPI 
+Disbursal)<
+/
+i
+>"]
+        
+PushNotification
+["send-push-notification<
+br
+/><
+i
+>(
+FCM 
+Multicast)<
+/
+i
+>"]
+        
+WhatsAppOtp
+[
+"send-
+whatsapp
+-
+otp
+ / notifications"]
+    end
+    subgraph 
+PostgresEngine
+ [PostgreSQL 17 Database Engine]
+        
+RLS[
+"
+🔒
+ Row Level Security (RLS 
+Engine)<
+br
+/><
+i
+>Zero-Trust Client Scoping</
+i
+>"]
+        
+        subgraph Extensions [Postgres Extensions]
+            
+PostGIS
+[
+"
+🌍
+ 
+PostGIS
+ (Spatial Distance Index)"]
+            
+Trgm
+[
+"
+🔍
+ 
+pg_trgm
+ (Trigram Search Index)"]
+            
+PgNet
+[
+"
+⚡
+ 
+pg_net
+ (Async HTTP Triggers)"]
+            
+Crypto[
+"
+🔐
+ 
+pgcrypto
+ (Cryptographic Hashing)"]
+        end
+        subgraph 
+CoreTables
+ [Core Schemas & Ledgers]
+            
+Bookings[
+"bookings (FSM & OTP Engine)"]
+            
+Ledger[
+"
+pandit_ledger
+ (Double-Entry Ledger)"]
+            
+AdEngine
+[
+"
+ad_campaigns
+ & 
+ad_wallets
+ (CPC Engine)"]
+            
+Profiles[
+"profiles & 
+pandit_profiles
+"]
+            
+MigrationLog
+[
+"_
+env_migration_log
+ (Dual Staging Tracker)"]
+        end
+    end
+    subgraph 
+ThirdParty
+ [Third-Party Integrations]
+        
+Razorpay
+[
+"
+💳
+ Razorpay Payment Gateway"]
+        
+Cashfree
+[
+"
+🏦
+ Cashfree Payouts API"]
+        
+FCM[
+"
+🔔
+ Firebase Cloud Messaging"]
+        
+WhatsApp[
+"
+💬
+ WhatsApp Cloud API / 
+OpenWA
+"]
+    end
+    %% Client Interactions
+    
+DevoteeApp
+ -->|
+GraphQL
+/REST & Realtime| RLS
+    
+DevoteeApp
+ -->|Checkout Initiation| 
+RazorpayOrder
+    
+DevoteeApp
+ -->|Payment Callback| 
+RazorpayVerify
+    
+PartnerApp
+ -->|State & KYC Sync| RLS
+    
+PartnerApp
+ -->|Handshake OTP Verification| Bookings
+    
+PartnerApp
+ -->|Request Cashout| Ledger
+    
+AdminWeb
+ -->|Server Actions / SSR| RLS
+    %% Edge Functions
+    
+RazorpayOrder
+ -->|Order Creation| 
+Razorpay
+    
+RazorpayVerify
+ -->|Verify Signature & Promote| Bookings
+    
+PgNet
+ -->|Async Webhook Dispatch| 
+CashfreePayout
+    
+PgNet
+ -->|Async Event Dispatch| 
+WhatsAppOtp
+    
+CashfreePayout
+ -->|Disburse Funds| 
+Cashfree
+    
+PushNotification
+ -->|Push Multicast| FCM
+    
+WhatsAppOtp
+ -->|Send Message| WhatsApp
+```
+---
+## 3. Architecture by Platform & Tech Stack
+### 3.1 Devotee Mobile App (`
+pandit_jii
+`)
+* 
+**Core 
+Stack:*
+*
+ Flutter (Stable), Dart 3, 
+Riverpod
+ v3 (with `@riverpod` code generation), 
+GoRouter
+ v17, 
+Supabase
+ Flutter, Sentry, Shorebird OTA.
+* 
+**Architecture 
+Pattern:*
+*
+ Clean Architecture (Presentation $\
+rightarrow
+$ Domain/State $\
+rightarrow
+$ Data/Repository):
+  - 
+**Feature-first 
+Modularization:*
+*
+ `features/home`, `features/search`, `features/horoscope`, `features/booking`, `features/profile`, `features/onboarding`.
+  - 
+**Vedic Astrology 
+Engine:*
+*
+ Client-side KP Astrology calculator (`
+kp_
+engine.dart
+`), Astro Rules engine (`
+astro_rules_
+engine.dart
+`), and AI horoscope synthesizers (`
+ai_horoscope_
+service.dart
+`).
+  - 
+**Smart 
+Discovery:*
+*
+ Geospatial nearest-pandit discovery with fallback to fuzzy ritual search (`
+search_pujas_and_pandits
+` RPC).
+  - 
+**Split-Payment 
+Checkout:*
+*
+ Supports 20% advance booking mode (`advance_20`) and 100% upfront payment (`full_100`) with 
+Razorpay
+ checkout orchestration.
+### 3.2 Partner Mobile App (`
+pandit_partner_app
+`)
+* 
+**Core 
+Stack:*
+*
+ Flutter, 
+Riverpod
+ v3, 
+GoRouter
+ v17, 
+Supabase
+ Flutter, Sentry.
+* 
+**Architecture 
+Pattern:*
+*
+ Clean Architecture with Offline-first Repositories:
+  - 
+**Priest Onboarding 
+Funnel:*
+*
+ Multi-step wizard validating Vedic qualifications, identity documents (PAN + Aadhaar/Voter ID), specialization tags, and platform fee processing.
+  - 
+**Interactive Availability 
+Scheduler:*
+*
+ Day/time slot 
+blockouts
+, minimum lead time configurator (default 12 hours), and toggle for same-day emergency rituals (`
+accepts_urgent_bookings
+`).
+  - 
+**Two-Phase OTP 
+Verification:*
+*
+ Embedded verification pad calling `
+verify_booking_otp
+` RPC with lockout 
+defenses
+ against brute force attempts.
+  - 
+**Financial Ledger & 
+Cashouts:*
+*
+ Real-time earnings tracker, breakdown of commissions (15% platform cut), multiple payout methods (UPI VPA + Bank IFSC/Account), and payout request lifecycle.
+  - 
+**B2B Ad Campaign 
+Manager:*
+*
+ In-app campaign builder setting CPC bids, daily/total budgets, and real-time impression analytics.
+### 3.3 Admin Web Dashboard (`
+pandit_admin_web
+`)
+* 
+**Core 
+Stack:*
+*
+ Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, `@supabase/ssr`, Recharts, Sentry.
+* 
+**Architecture 
+Pattern:*
+*
+ React Server Components (RSC) by Default:
+  - 
+**Strict Server 
+Context:*
+*
+ Server Components fetch data directly with async/await without client hydration penalty.
+  - 
+**Role-Based Access Control (RBAC
+):*
+*
+ Middleware checks `
+admin_users
+` table for `admin`, `
+super_admin
+`, and `support` roles.
+  - 
+**Financial Operations 
+Hub:*
+*
+ Live ledger balance audits, gross revenue calculators, single-click payout approvals/rejections (`process_payout_v2` RPC).
+  - 
+**KYC Review 
+Workbench:*
+*
+ Side-by-side document inspector with zoomable lightbox and single-click verification status promotion (`
+verify_pandit_kyc
+` RPC).
+### 3.4 Database & Backend Infrastructure (
+Supabase
+ & Postgres)
+* 
+**PostgreSQL 17**
+ hosting over 
+**50+ relational tables**
+, 15+ materialized/security views, 25+ stored procedures, and 12 event triggers.
+* 
+**Dual-Environment 
+Staging:*
+*
+  - 
+**DEV 
+Database:**
+  (
+Staging, feature branches, test seed data)
+  - 
+**PROD 
+Database:*
+*
+ ` (Live production, strict access controls)
+* 
+**Custom Environment Migrator 
+Skill:*
+*
+ [`supabase-env-migrator
+`](
+file:///e:/drive/broo/.agents/skills/supabase-env-migrator/SKILL.md
+) ensuring automated schema diffing and zero-drift migrations between environments.
+---
+## 4. 7 Engineering Masterstrokes (Deep Technical Highlights)
+Highlight these specific implementation details in interviews to demonstrate deep software engineering maturity:
+### 1. Two-Phase Physical Handshake Protocol (Zero-Fraud Booking Verification)
+* 
+**
+Problem:*
+*
+ How do you guarantee that a booked priest actually arrived at the devotee's home and conducted the full ritual before disbursing payments?
+* 
+**
+Solution:*
+*
+  - 
+**Phase 1 (Arrival
+):*
+*
+ When the booking is confirmed, a cryptographic 4-digit `
+start_otp
+` is generated. The Pandit arrives and enters the Start OTP. A `SECURITY DEFINER` RPC `
+verify_booking_
+otp
+(
+..., 'start
+')`
+ verifies the code, transitions state to `
+in_progress
+`, and immediately invalidates the Start OTP.
+  - 
+**Phase 2 (Completion
+):*
+*
+ Upon ritual completion, the devotee shares a distinct `
+completion_otp
+`. Verifying this OTP transitions state to `completed`, automatically triggering double-entry credit into the Pandit's ledger.
+  - 
+**Zero-Knowledge 
+RLS:*
+*
+ Database RLS explicitly excludes `
+start_otp
+` and `
+completion_otp
+` columns from any SELECT query executed by Pandits, preventing client-side inspection or network snooping.
+### 2. Double-Entry Financial Ledger with Atomic Balance Invariants
+* 
+**
+Problem:*
+*
+ Preventing race conditions, duplicate payouts, and floating-point errors in priest earnings and refund processing.
+* 
+**
+Solution:*
+*
+  - Double-entry ledger table `
+pandit_ledger
+` where every transaction has a corresponding `
+source_type
+` (`
+booking_earnings
+`, `payout`, `
+payout_refund
+`, `bonus`), `
+source_id
+`, `amount`, and `
+balance_after
+`.
+  - Stored procedure `process_payout_v2` utilizes `SELECT ... FOR UPDATE` row locks to prevent concurrent double-withdrawal attempts.
+  - In the event of a payout rejection by admin or bank gateway, funds are credited back via an atomic ledger reversal with explicit audit notes.
+### 3. Split-Payment Engine with Server-Side Cryptographic Signature Verification
+* 
+**
+Problem:*
+*
+ Ensuring devotees can pay a 20% advance deposit to hold a slot and pay the remaining 80% later, while guaranteeing payment authenticity against client tamper attacks.
+* 
+**
+Solution:*
+*
+  - Devotee initiates checkout $\
+rightarrow
+$ Edge Function calculates package costs and creates a 
+Razorpay
+ Order ID.
+  - Client pays $\
+rightarrow
+$ Devotee App submits `
+razorpay_order_id
+`, `
+razorpay_payment_id
+`, and `
+razorpay_signature
+`.
+  - Database RPC `
+confirm_booking_payment
+` retrieves `RAZORPAY_KEY_SECRET` from secure `
+app_secrets
+` and verifies the HMAC-SHA256 cryptographic hash (`
+extensions.hmac
+`).
+  - Devotees cannot mutate their own booking status to `confirmed` via SQL—only validated signatures unlock confirmed status.
+### 4. Self-Serve B2B Sponsored Ad Monetization Engine
+* 
+**
+Problem:*
+*
+ Allowing priests to bid on high-intent puja searches with real-time budget depletion and fraud prevention.
+* 
+**
+Solution:*
+*
+  - Pandits maintain an `
+ad_wallets
+` balance and configure `
+ad_campaigns
+` with CPC bids and daily/total budget caps.
+  - When devotees search for pujas, the `
+search_pujas_and_
+pandits
+(
+)` RPC injects sponsored Pandit profiles at the top based on active campaign bids and relevancy.
+  - On click, `
+record_ad_
+click
+(
+)` atomically deducts the CPC bid from `
+ad_wallets
+`, logs the impression/session in `
+ad_clicks
+`, increments `
+amount_spent
+`, and automatically pauses the campaign if the balance drops below the CPC threshold.
+### 5. Asynchronous Event-Driven Webhook Dispatch via `
+pg_net
+`
+* 
+**
+Problem:*
+*
+ Triggering third-party APIs (WhatsApp messages, 
+Cashfree
+ bank payouts, FCM push notifications) directly from Postgres without blocking ACID transaction threads.
+* 
+**
+Solution:*
+*
+  - Database triggers utilize the `
+net.http
+_
+post
+(
+)` asynchronous extension to emit webhook payloads to 
+Supabase
+ Deno Edge Functions in the background.
+  - Edge Functions authenticate with third-party APIs and write results back to `
+whatsapp_logs
+` and `
+payout_requests
+`.
+  - Database operations complete sub-millisecond, entirely decoupling external API latency from user database writes.
+### 6. Event Trigger-Enforced Row-Level Security (`
+rls_auto_enable
+`)
+* 
+**
+Problem:*
+*
+ In rapidly evolving schemas, a developer might create a new table and accidentally forget `ALTER TABLE ... ENABLE ROW LEVEL 
+SECURITY;`
+, creating a catastrophic security loophole.
+* 
+**
+Solution:*
+*
+  - Implemented a PostgreSQL `EVENT TRIGGER` (`
+trg_rls_auto_enable
+`) on `
+ddl_command_end
+`.
+  - Any `CREATE TABLE` execution in the `public` schema automatically triggers the event handler to enforce RLS immediately upon creation.
+### 7. Dual-Environment Schema Migrator & Persistent Audit Ledger
+* 
+**
+Problem:*
+*
+ Safely managing database evolution from Development to Production (`with 100% reproducible parity.
+* 
+**
+Solution:*
+*
+  - Automated diffing script inspects tables, columns, routines, triggers, and secrets across both instances.
+  - Implemented an immutable in-database ledger table `_
+env_migration_log
+` in both environments paired with an in-repo JSON changelog [migration_
+history.json
+](
+file:///e:/drive/broo/.agents/skills/supabase-env-migrator/migration_history.json
+).
+---
+## 5. Database Engineering & Staging Lifecycle
+### Environment Topology
+```
+┌────────────────────────────────────────────────────────┐
+│                   LOCAL / DEV WORKSPACE                │
+│  -
+ Flutter Devotee & Partner Apps                      │
+│  -
+ Next.js Admin Panel                                 │
+└──────────────────────────
+┬
+─────────────────────────────┘
+                           │
+                           
+▼
+┌────────────────────────────────────────────────────────┐
+│         DEVELOPMENT DATABASE      │
+│  -
+ Feature testing & rapid DDL iterations              │
+│  -
+ Mock datasets & automated test runs                 │
+└──────────────────────────
+┬
+─────────────────────────────┘
+                           
+│  [
+supabase
+-env-migrator Skill]
+                           
+│  -
+ Automated AST Schema Diff
+                           
+│  -
+ Idempotent DDL Generation
+                           
+▼
+┌────────────────────────────────────────────────────────┐
+│         PRODUCTION DATABASE 
+()   
+  │
+│  -
+ Live Devotee & Pandit Production Traffic            │
+│  -
+ Recorded in _
+env_migration_log
+ & 
+migration_
+history
+  │
+└────────────────────────────────────────────────────────┘
+```
+---
+## 6. Security & Zero-Trust Architecture
+| Security Vector | Implementation Detail | Protection Achieved |
+| :--- | :--- | :--- |
+| 
+**Data Scoping**
+ | PostgreSQL Row-Level Security (RLS) on 100% of tables | Clients can only read/write their own records; cross-tenant leaks are mathematically impossible. |
+| 
+**Privilege Escalation**
+ | `SECURITY DEFINER` functions with fixed `
+search_path
+` (`SET 
+search_path
+ = public, 
+pg_
+temp
+;`
+) | Prevents search-path hijacking attacks in Postgres functions. |
+| 
+**Sensitive Field Shielding**
+ | Explicit column projection & view abstraction | Pandits cannot query OTPs or admin internal review notes. |
+| 
+**Payment Integrity**
+ | Server-side HMAC-SHA256 cryptographic signature validation | Devotees cannot spoof payment completion. |
+| 
+**Admin Authorization**
+ | Subquery check against `
+admin_users
+` table | Prevents authenticated standard users from accessing admin routes or RPCs. |
+---
